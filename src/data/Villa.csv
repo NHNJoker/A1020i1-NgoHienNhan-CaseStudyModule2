@@ -1,2 +1,4 @@
 Id,Service name,Area used,Rental cost,Max people,Rental type,Type of room,Other amenities,Acreage pool,Num of floor
 SVVL-1234,Villa,50.0,50,5,Vip,Vip,ho boi,50.0,7
+SVVL-1234,Vip,50.0,50,5,Vip,Vip,ho boi,50.0,5
+SVVL-1234,Villa,50.0,50,5,Vip,Vip,Ho Boi,50.0,5

@@ -29,7 +29,7 @@ public class WriteAndReadFileServiceCSV {
                     break;
                 case "Room":
                     fileName = "src/Data/Room.csv";
-                    header += "Service free";
+                    header += "Service free name,Unit,Price";
                     break;
             }
             assert fileName != null;
@@ -70,12 +70,15 @@ public class WriteAndReadFileServiceCSV {
                         fileWriter.append(NEW_LINE_SEPARATOR);
                         break;
                     case "Room":
-                        fileWriter.append(String.valueOf(((Room) services).getServiceFreeObj()));
+                        fileWriter.append(((Room) services).getServiceFreeObj().getServiceFreeName());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(String.valueOf(((Room) services).getServiceFreeObj().getUnit()));
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(String.valueOf(((Room) services).getServiceFreeObj().getPrice()));
                         fileWriter.append(NEW_LINE_SEPARATOR);
                         break;
                 }
             }
-
         } catch (Exception exception) {
             System.out.println("Error in CsvFileWrite !!!");
         } finally {
@@ -108,7 +111,6 @@ public class WriteAndReadFileServiceCSV {
                 if (splitData[0].equals("Id")) {
                     continue;
                 }
-
                 switch (typeOfService) {
                     case "Villa":
                         Villa villa = new Villa();
@@ -145,6 +147,12 @@ public class WriteAndReadFileServiceCSV {
                         room.setRentalCosts(Integer.parseInt(splitData[3]));
                         room.setMaxPeople(Integer.parseInt(splitData[4]));
                         room.setRentalType(splitData[5]);
+                        ServiceFree serviceFree = new ServiceFree();
+                        serviceFree.setServiceFreeName(splitData[6]);
+                        serviceFree.setUnit(Integer.parseInt(splitData[7]));
+                        serviceFree.setPrice(Integer.parseInt(splitData[8]));
+                        room.setServiceFreeObj(serviceFree);
+                        listService.add(room);
                         break;
                 }
 

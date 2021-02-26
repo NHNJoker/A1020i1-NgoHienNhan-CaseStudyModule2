@@ -48,9 +48,10 @@ public class WriteAndReadFileCustomerCSV {
             }
         }
     }
+
     public static ArrayList<Customer> readFile(){
         BufferedReader br = null;
-        ArrayList<Customer> listService = new ArrayList<Customer>();
+        ArrayList<Customer> listCustomer = new ArrayList<Customer>();
         Path path = Paths.get("src/Data/Customer.csv");
         if (!Files.exists(path)){
             try {
@@ -75,11 +76,18 @@ public class WriteAndReadFileCustomerCSV {
                 customer.setEmail(splitData[4]);
                 customer.setTypeOfCus(splitData[5]);
                 customer.setAddress(splitData[6]);
-//                customer.setUseService(splitData[7]);
+                listCustomer.add(customer);
             }
         }catch (Exception exception){
             System.out.println(exception.getMessage());
+        }finally {
+            try {
+                assert br != null;
+                br.close();
+            } catch (Exception exception) {
+                System.out.println(exception.getMessage());
+            }
         }
-        return listService;
+        return listCustomer;
     }
 }

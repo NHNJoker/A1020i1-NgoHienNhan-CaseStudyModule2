@@ -1,7 +1,6 @@
 package models;
 
-import java.util.Calendar;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Customer {
@@ -107,18 +106,33 @@ public class Customer {
         input.nextLine();
         System.out.println("Enter email:");
         customer.setEmail(input.nextLine());
-        System.out.println("Enter type of customer:");
-        customer.setTypeOfCus(input.nextLine());
+        System.out.println("Enter type of customer:\n" + "1. Diamond\n"
+                + "2. Platinum\n" + "3. Gold\n" + "4. Silver\n"+"5. Member");
+        int chose = input.nextInt();
+        switch (chose){
+            case 1:
+                setTypeOfCus("Diamond");
+                break;
+            case 2:
+                setTypeOfCus("Platinum");
+                break;
+            case 3:
+                setTypeOfCus("Gold");
+                break;
+            case 4:
+                setTypeOfCus("Silver");
+                break;
+            case 5:
+                setTypeOfCus("Member");
+                break;
+        }
         System.out.println("Enter address:");
         customer.setAddress(input.nextLine());
-        System.out.println("Enter use service:");
-        checkUseService(customer);
     }
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "nameCus='" + nameCus + '\'' +
+        return "nameCus='" + nameCus + '\'' +
                 ", dateOfBirth='" + dateOfBirth + '\'' +
                 ", gender='" + gender + '\'' +
                 ", id=" + id +
@@ -133,30 +147,31 @@ public class Customer {
         System.out.println(customer.toString());
     }
 
-    public void showInformationCustomer(Customer customer) {
-        System.out.println("Name of customer:");
-        System.out.println(customer.getNameCus());
-        System.out.println("Date of birth:");
-        System.out.println(customer.getDateOfBirth());
-        System.out.println("Gender:");
-        System.out.println(customer.getGender());
-        System.out.println("ID:");
-        System.out.println(customer.getId());
-        System.out.println("Email:");
-        System.out.println(customer.getEmail());
-        System.out.println("Type of customer:");
-        System.out.println(customer.getTypeOfCus());
-        System.out.println("Address:");
-        System.out.println(customer.getAddress());
-        System.out.println("Use service:");
-
+    public static void showInformationCustomer() {
+        ArrayList<Customer> customerArrayList = WriteAndReadFileCustomerCSV.readFile();
+        Collections.sort(customerArrayList, new Comparator<Customer>() {
+            @Override
+            public int compare(Customer o1, Customer o2) {
+                if (o2.getNameCus().compareTo(o1.getNameCus()) != 0) {
+                    return o2.getNameCus().compareTo(o1.getNameCus());
+                } else {
+                    int yearO1 = Integer.parseInt(o1.getDateOfBirth().substring(6, 10));
+                    int yearO2 = Integer.parseInt(o2.getDateOfBirth().substring(6, 10));
+                    return yearO1 - yearO2;
+                }
+            }
+        });
+        for (Customer customer : customerArrayList) {
+            System.out.println(customer.toString());
+            System.out.println("----------------------------");
+        }
     }
 
     public void userException(Customer customer) {
         Scanner input = new Scanner(System.in);
         boolean check = false;
         while (!check) {
-            if (!Pattern.matches("[A-Z][a-z]+([ ][A-Z][a-z]+)+", customer.getNameCus())) {
+            if (!Pattern.matches("[A-Z][a-z]+([ ][A-Z][a-z]+|[ ][A-Z])+", customer.getNameCus())) {
                 System.out.println("Client Name must capitalize first letter of each word.(Ex:Nguyen Van A)");
                 customer.setNameCus(input.nextLine());
             } else {
@@ -196,50 +211,19 @@ public class Customer {
         check = false;
         while (!check) {
             if (Pattern.matches("^(([0-2][0-9])|(30)|(31))\\/(([0][1-9])|([1][0-2]))\\/(([1][9][0-9)][0-9])|([2][0][0-2][0-1]))$", customer.getDateOfBirth())) {
-                if ((Integer.parseInt(customer.getDateOfBirth().substring(6,10))+18)<= Calendar.getInstance().get(Calendar.YEAR)){
+                if ((Integer.parseInt(customer.getDateOfBirth().substring(6, 10)) + 18) <= Calendar.getInstance().get(Calendar.YEAR)) {
                     check = true;
-                }else {
+                } else {
                     System.out.println("Year of birth must be greater than 1900 and less than 18 years from" +
                             " the current year, in the correct format dd / mm / yyyy");
                     customer.setDateOfBirth(input.nextLine());
                 }
-            }else {
+            } else {
                 System.out.println("Year of birth must be greater than 1900 and less than 18 years from" +
                         " the current year, in the correct format dd / mm / yyyy");
                 customer.setDateOfBirth(input.nextLine());
             }
         }
 
-    }
-    public void checkUseService(Customer customer){
-        Scanner input = new Scanner(System.in);
-        boolean check = false;
-        String checkUseService = input.nextLine();
-        while (!check) {
-            switch (checkUseService) {
-                case "Villa": {
-                    Services services = new Villa();
-                    customer.setUseService(services);
-                    check=true;
-                    break;
-                }
-                case "House": {
-                    Services services = new House();
-                    customer.setUseService(services);
-                    check = true;
-                    break;
-                }
-                case "Room": {
-                    Services services = new Room();
-                    customer.setUseService(services);
-                    check = true;
-                    break;
-                }
-                default:
-                    System.out.println("Enter use service (Villa or House or Room):");
-                    checkUseService = input.nextLine();
-            }
-
-        }
     }
 }
